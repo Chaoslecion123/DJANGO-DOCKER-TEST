@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container text-center">
+        <div class="movil">
+                <div >
+                        <div class="card mt-3">
+                            <div class="card-header">Buscar Cursos</div>
+                            <div class='card-body'>
+                                <div class="">
+                                   <select name="select" id="id_select" onchange="ShowSelected()" style='max-width: 100px;'>
+                                    <option selected="true" disabled="disabled">seleccione el curso</option>
+                                    {% for curso in cursos %}
+                                      <option value="{{curso.id}}">{{curso.name}}</a></option>
+                                    {% endfor %}
+                                </select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+            <div class="mb-2">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        {{object.name}}
+                    </div>
+                    <p class="card-text">{{object.description}}</p>
+                    {% for i in object.interfaz.all %}
+                        <div class="text-align border mb-3 p-3 mx-auto cuadro" style="max-width: 280px">
+                            {% if i.photo %}
+                            <img src="{{i.photo.url}}" width='150' height='150'>
+                            {% endif %}
+                            <div class="card-text">
+                                {{i.description}}
+                            </div>
+
+                            {% if i.document %}
+                            <a href="{{i.document.url}}">{{i.document}}</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock content %}
+{% block styles %}
+
+<style>
+
+.cuadro{
+
+    border-radius: 5px;
+
+}
+@media (max-width: 360px) {
+.movil{
+    display: block !important;
+    }
+}
+
+
+.fiore{
+    border: 1px coral;
+    opacity: 0.2;
+}
+
+
+
+</style>
+
+{% endblock styles %}
+{% block js %}
+<script>
+    function ShowSelected(){
+        var value_ = document.getElementById('id_select').value;
+        var url = "{% url 'curso-detail' pk=123 %}";
+        location.href= url.replace('123',value_)
+
+    }
+
+</script>
+
+{% endblock js %}

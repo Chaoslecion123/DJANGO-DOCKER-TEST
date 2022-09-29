@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center"  style="margin-top:122px ; border: none !important;">
+    <div class=" ">
+        <h2 style="color:white;-webkit-text-stroke-width: thick;">FIISBOOK</h2>
+    </div>
+    <div class="card-body">
+
+        <form action="" method="post">{% csrf_token %}
+
+                <div class="form-group">
+
+                   <div class="mb-3">{{ form.username }}</div>
+                   <div class="mb-3">{{ form.password }}</div>
+                   <div class="mb-3">{{ form.password2 }}</div>
+
+                   <div class="mb-3">{{ form.schools_type }}</div>
+
+                    <!-- {{field}} -->
+
+                    {% if field.errors  %}
+                        {{field.errors}}
+                    {% endif %}
+                </div>
+
+            <button class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}
+{% block styles %}
+<style>
+@media (max-width: 360px) {
+.movil{
+    display: block !important;
+    }
+}
+
+body{
+    background-color: darkblue !important;
+    }
+.fiore{
+    border: 1px coral;
+    opacity: 0.2;
+}
+
+</style>
+{% endblock styles %}

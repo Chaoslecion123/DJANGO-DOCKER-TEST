@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card text-center border " style="margin: auto auto; max-width: 520px;">
+        <form method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+{% endblock content %}
+{% block styles %}
+<style>
+@media (max-width: 400px) {
+    .movil
+    {
+        display: block !important;
+    }
+    .mar{
+        margin-top:5px;
+    }
+
+}
+    .mau{
+        border: none;
+    }
+
+
+._16vg>._5xmp {
+    display: inline-block;
+}
+
+._16vg>._5xmp:not(:last-child) {
+    margin-right: 6px;
+}
+
+.cuadro{
+    border-radius:5px;
+     height: 120px;
+}
+</style>
+
+{% endblock styles %}
