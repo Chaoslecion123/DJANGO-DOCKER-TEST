@@ -11,7 +11,7 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
-      - echo Build started on `date`
+      - echo Build started on `date 2`
       - echo Building the docker image
       - docker-compose -f production.yml build 
       - docker images
