@@ -15,6 +15,7 @@ phases:
       - echo Building the docker image
       - docker-compose --version
       - ls
+      - pwd
       - docker-compose -f production.yml down
       - docker-compose -f production.yml build 
       - docker images
