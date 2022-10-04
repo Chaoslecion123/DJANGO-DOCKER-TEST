@@ -1,34 +1,26 @@
 version: 0.2
+
 phases:
-  install:
-    runtime-versions:
-      python: 3.10
-    commands:
-      - echo "Performing manual install of compose cli"
-      - curl -L -o docker-linux-amd64.tar.gz https://github.com/docker/compose-cli/releases/download/v1.0.10/docker-linux-amd64.tar.gz
-      - tar xzf docker-linux-amd64.tar.gz
-      - chmod +x docker/docker
-      - ls -ltr
-      - docker/docker compose --help
-      - which docker
-      - ln -s $(which docker) /usr/local/bin/com.docker.cli
   pre_build:
     commands:
-      - echo Logging in to Docker Hub...
-      - docker login --username chaoslecion --password Newyesterday123.
-
+      - echo Logging in to AWS ECR
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 837789023751.dkr.ecr.us-east-1.amazonaws.com/cursodjango09
+      - REPOSITORY_URI=837789023751.dkr.ecr.us-east-1.amazonaws.com/cursodjango09
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
       - echo Build started on `date`
-      #- docker/docker compose -f production.yml build
-      - sudo docker/docker compose build
-      - echo "Tagging Docker image for Docker Hub"
-      - sudo docker images
-      # - docker tag src_backend:latest ${DOCKERHUB_USERNAME}/docker-compose-ecs-sample_backend:${CODEBUILD_RESOLVED_SOURCE_VERSION}
-      # - docker tag src_frontend:latest ${DOCKERHUB_USERNAME}/docker-compose-ecs-sample_frontend:${CODEBUILD_RESOLVED_SOURCE_VERSION}
-      # - docker push ${DOCKERHUB_USERNAME}/docker-compose-ecs-sample_backend:${CODEBUILD_RESOLVED_SOURCE_VERSION}
-      # - docker push ${DOCKERHUB_USERNAME}/docker-compose-ecs-sample_frontend:${CODEBUILD_RESOLVED_SOURCE_VERSION}
-  
-  post_build:
+      - echo Building the docker image
+      - docker-compose -f production.yml build 
+      - docker images
+      #- docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
+  post_build: 
     commands:
-      - echo "build successful"
+      - echo Build completed on `date`
+      - echo Pushing the docker image
+      #- docker push $REPOSITORY_URI:latest
+      #- docker push $REPOSITORY_URI:$IMAGE_TAG
+
