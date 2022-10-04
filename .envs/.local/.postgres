@@ -1,6 +1,6 @@
 # PostgreSQL
-POSTGRES_HOST=postgres
+POSTGRES_HOST=database-django.c3nlteckmr3z.us-east-1.rds.amazonaws.com
 POSTGRES_PORT=5432
-POSTGRES_DB=fiisbook
-POSTGRES_USER=sBLRWyyPsInwHftmHAWmYJURGWBGFpLs
-POSTGRES_PASSWORD=tuXL3XSF8O7tsGrcGHoMos4tVNtL3tnrRshSCZokGnIfk4ArDyzaa297k2WgQPSL
+POSTGRES_DB=database-django
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
