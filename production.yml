@@ -15,8 +15,8 @@ services:
       - postgres
       # - redis
     env_file:
-      - ./.envs/.production/.django
-      - ./src/.envs/.production/.postgres
+      - ./envs/.production/.django
+      - ./envs/.production/.postgres
     command: /start
 
   postgres:
@@ -28,7 +28,7 @@ services:
       - production_postgres_data:/var/lib/postgresql/data
       - production_postgres_data_backups:/backups
     env_file:
-      - ./src/.envs/.production/.postgres
+      - ./envs/.production/.postgres
 
   caddy:
     build:
@@ -40,7 +40,7 @@ services:
     volumes:
       - production_caddy:/root/.caddyv2
     env_file:
-      - ./src/.envs/.production/.caddy
+      - ./envs/.production/.caddy
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
