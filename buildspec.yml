@@ -16,9 +16,8 @@ phases:
       - docker-compose --version
       - ls
       - pwd
-      - docker-compose -f production.yml down
-      - docker-compose -f production.yml build 
-      - docker images
+      - sudo docker-compose -f production.yml build 
+      - sudo docker images
       #- docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
 
   post_build: 
