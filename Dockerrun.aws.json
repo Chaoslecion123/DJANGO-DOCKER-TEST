@@ -3,7 +3,7 @@
     "containerDefinitions": [
       {
         "name": "django",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf",
+        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf:latest",
         "hostname": "django",
         "essential": true,
         "memory": 1024,
@@ -16,7 +16,7 @@
       },
       {
         "name": "postgres",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf",
+        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf:latest",
         "hostname": "postgres",
         "essential": true,
         "memory": 512,
@@ -29,7 +29,7 @@
       },
       {
         "name": "caddy",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf",
+        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf:latest",
         "hostname": "caddy",
         "essential": true,
         "portMappings": [ 
