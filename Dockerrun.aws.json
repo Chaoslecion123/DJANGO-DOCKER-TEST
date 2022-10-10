@@ -1,11 +1,49 @@
 {
-    "AWSEBDockerrunVersion": "1",
-    "Image": {
-        "Name":"837789023751.dkr.ecr.us-east-1.amazonaws.com/cursodjango2022:latest"
-    },
-    "Ports": [
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+      {
+        "name": "django",
+        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/django-sf",
+        "hostname": "django",
+        "essential": true,
+        "memory": 1024,
+        "portMappings": [
+          {
+            "hostPort": 5000,
+            "containerPort": 5000
+          }
+        ]
+      },
+      {
+        "name": "postgres",
+        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/postgres-lf",
+        "hostname": "postgres",
+        "essential": true,
+        "memory": 512,
+        "portMappings": [
+          {
+            "hostPort": 5432,
+            "containerPort": 5432
+          }
+        ]
+      },
+      {
+        "name": "caddy",
+        "image": "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/caddy-lf",
+        "hostname": "caddy",
+        "essential": true,
+        "portMappings": [ 
         {
-            "ContainerPort":5000
-        }
+            "hostPort": 80,
+            "containerPort": 80
+            },
+          {
+            "hostPort": 443,
+            "containerPort": 443
+          }
+        ],
+        // "links": ["django", "postgres"],
+        "memory": 512
+      }
     ]
-}
+  }

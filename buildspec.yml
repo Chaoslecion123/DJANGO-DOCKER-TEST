@@ -1,29 +1,22 @@
 version: 0.2
-
 phases:
+  install:
+    runtime-versions:
+      docker: 18
   pre_build:
     commands:
-      - echo Logging in to AWS ECR
-      - aws --version
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 837789023751.dkr.ecr.us-east-1.amazonaws.com/cursodjango09
-      - REPOSITORY_URI=837789023751.dkr.ecr.us-east-1.amazonaws.com/cursodjango09
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - echo Build started on `date 2`
-      - echo Building the docker image
-      - docker-compose --version
-      - ls
-      - pwd
-      - sudo docker-compose -f production.yml build 
-      - sudo docker images
-      #- docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-
-  post_build: 
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker-compose --file=production.yml build
+  post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the docker image
-      #- docker push $REPOSITORY_URI:latest
-      #- docker push $REPOSITORY_URI:$IMAGE_TAG
-
+      - echo Pushing the Docker image...
+      - docker-compose --file=production.yml push
+artifacts:
+  files:
+    - 'Dockerrun.aws.json'
