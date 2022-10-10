@@ -25,7 +25,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - sudo docker-compose -f production.yml ps
+      - sudo docker-compose -f production.yml images 
       - sudo docker-compose --file=production.yml push
 artifacts:
   files:
