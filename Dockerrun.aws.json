@@ -42,7 +42,6 @@
             "containerPort": 443
           }
         ],
-        // "links": ["django", "postgres"],
         "memory": 512
       }
     ]
