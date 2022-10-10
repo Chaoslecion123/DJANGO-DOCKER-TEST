@@ -1,48 +1,48 @@
 {
     "AWSEBDockerrunVersion": 2,
     "containerDefinitions": [
-      {
-        "name": "django",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf",
-        "hostname": "django",
-        "essential": true,
-        "memory": 1024,
-        "portMappings": [
-          {
-            "hostPort": 5000,
-            "containerPort": 5000
-          }
-        ]
-      },
-      {
-        "name": "postgres",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf",
-        "hostname": "postgres",
-        "essential": true,
-        "memory": 512,
-        "portMappings": [
-          {
-            "hostPort": 5432,
-            "containerPort": 5432
-          }
-        ]
-      },
-      {
-        "name": "caddy",
-        "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf",
-        "hostname": "caddy",
-        "essential": true,
-        "portMappings": [ 
         {
-            "hostPort": 80,
-            "containerPort": 80
-            },
-          {
-            "hostPort": 443,
-            "containerPort": 443
-          }
-        ],
-        "memory": 512
-      }
+            "name": "django",
+            "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf",
+            "hostname": "django",
+            "essential": true,
+            "memory": 1024,
+            "portMappings": [
+                {
+                    "hostPort": 5000,
+                    "containerPort": 5000
+                }
+            ]
+        },
+        {
+            "name": "postgres",
+            "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf",
+            "hostname": "postgres",
+            "essential": true,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "hostPort": 5432,
+                    "containerPort": 5432
+                }
+            ]
+        },
+        {
+            "name": "caddy",
+            "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf",
+            "hostname": "caddy",
+            "essential": true,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 80
+                },
+                {
+                    "hostPort": 443,
+                    "containerPort": 443
+                }
+            ],
+            "memory": 512
+        }
     ]
-  }
+}
