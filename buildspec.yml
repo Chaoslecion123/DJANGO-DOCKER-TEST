@@ -11,6 +11,9 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
+      - sudo usermod -aG docker $USER
+      - sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+      - sudo service docker restart
       - sudo docker-compose --file=production.yml build
   post_build:
     commands:
