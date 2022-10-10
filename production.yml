@@ -10,7 +10,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/django-sf
+    image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf
     depends_on:
       - postgres
       # - redis
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/postgres-lf
+    image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf
     volumes:
       - production_postgres_data:/var/lib/postgresql/data
     env_file:
@@ -33,7 +33,7 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/caddy/Dockerfile
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/caddy-lf
+    image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf
     depends_on:
       - django
     volumes:
