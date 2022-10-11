@@ -15,19 +15,6 @@
             ]
         },
         {
-            "name": "postgres",
-            "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf",
-            "hostname": "postgres",
-            "essential": true,
-            "memory": 512,
-            "portMappings": [
-                {
-                    "hostPort": 5432,
-                    "containerPort": 5432
-                }
-            ]
-        },
-        {
             "name": "caddy",
             "image": "837789023751.dkr.ecr.us-east-1.amazonaws.com/caddy-lf",
             "hostname": "caddy",
