@@ -1,1 +1,1 @@
-es un proyecto hecho en django
+es un proyecto hecho en django esta en dev
