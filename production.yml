@@ -12,9 +12,6 @@ services:
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
     image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf:latest
-    depends_on:
-      - postgres
-      # - redis
     env_file:
       - ./envs/.production/.django
       - ./envs/.production/.postgres
