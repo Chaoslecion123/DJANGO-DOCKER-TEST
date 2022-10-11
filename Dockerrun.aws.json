@@ -29,7 +29,8 @@
                     "containerPort": 443
                 }
             ],
-            "memory": 512
+            "memory": 512,
+            "links": ["django"]
         }
     ]
 }
