@@ -2,31 +2,21 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.8
-    commands:
-      - echo "Performing manual install of compose cli"
-      - curl -L -o docker-linux-amd64.tar.gz https://github.com/docker/compose-cli/releases/download/v1.0.10/docker-linux-amd64.tar.gz
-      - tar xzf docker-linux-amd64.tar.gz
-      - chmod +x docker/docker
-      - ls -ltr
-      - docker/docker compose --help
-      - which docker
-      - ln -s $(which docker) /usr/local/bin/com.docker.cli
+      docker: 20
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 837789023751.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 862363392700.dkr.ecr.us-east-1.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - sudo docker-compose --file=production.yml build
+      - docker compose --file=production.yml build
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - sudo docker-compose -f production.yml images 
-      - sudo docker-compose --file=production.yml push
+      - docker compose --file=production.yml push
 artifacts:
   files:
     - 'Dockerrun.aws.json'

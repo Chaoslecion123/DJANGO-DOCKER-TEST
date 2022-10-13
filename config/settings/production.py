@@ -5,7 +5,7 @@ from .base import env
 
 # Base
 SECRET_KEY = env('DJANGO_SECRET_KEY')
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['multicontainerdockertutorial-env.eba-wp7mn2vs.us-east-1.elasticbeanstalk.com'])
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['multicontainerdockertutorial-env.eba-jc2fzfur.us-east-1.elasticbeanstalk.com'])
 
 # Databases
 DATABASES['default'] = env.db('DATABASE_URL')  # NOQA
