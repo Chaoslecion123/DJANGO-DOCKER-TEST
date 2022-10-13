@@ -12,24 +12,24 @@ services:
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
     image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/django-sf:latest
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
       # - redis
     env_file:
       - ./envs/.production/.django
       - ./envs/.production/.postgres
     command: /start
 
-  postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    container_name: postgres
-    image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf:latest
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data
-    env_file:
-      - ./envs/.production/.postgres
+  # postgres:
+  #   build:
+  #     context: .
+  #     dockerfile: ./compose/production/postgres/Dockerfile
+  #   container_name: postgres
+  #   image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf:latest
+  #   volumes:
+  #     - production_postgres_data:/var/lib/postgresql/data
+  #   env_file:
+  #     - ./envs/.production/.postgres
 
   caddy:
     build:
