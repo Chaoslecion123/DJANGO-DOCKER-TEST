@@ -1,0 +1,6 @@
+# PostgreSQL
+POSTGRES_HOST=db-django.c3nlteckmr3z.us-east-1.rds.amazonaws.com
+POSTGRES_PORT=5432
+POSTGRES_DB=db-django
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
