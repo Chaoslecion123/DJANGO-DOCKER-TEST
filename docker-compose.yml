@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
-    image: public.ecr.aws/f4b1k6j1/django-app-2
+    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/django-app
     # depends_on:
     #   - postgres
       # - redis
