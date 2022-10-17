@@ -1,0 +1,23 @@
+language: generic
+
+services:
+  - docker
+
+after_succes:
+  - docker build -t chaoslecion/fer-app .
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker push chaoslecion/fer-app
+
+deploy:
+  provider: elasticbeanstalk
+  region: ap-south-1
+  app: multicontainer-docker-tutorial-django
+  env: Multicontainerdockertutorialdjango-env
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket_name: "buckets-travis-2022fer"
+  bucket_path: "docker"
+  on:
+    branch: dev
