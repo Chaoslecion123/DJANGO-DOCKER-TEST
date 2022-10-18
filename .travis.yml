@@ -12,7 +12,7 @@ after_succes:
 
 deploy:
   provider: elasticbeanstalk
-  region: ap-south-1
+  region: us-east-1
   app: multicontainer-docker-tutorial-django
   env: Multicontainerdockertutorialdjango-env
   access_key_id: $AWS_ACCESS_KEY
