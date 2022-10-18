@@ -4,7 +4,7 @@ services:
   - docker
 
 after_succes:
-  - docker build -t chaoslecion/fer-app .
+  - docker build -t chaoslecion/fer-app -f  compose/production/django/Dockerfile . 
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
