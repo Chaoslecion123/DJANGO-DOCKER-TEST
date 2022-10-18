@@ -1,36 +1,58 @@
 {
-    "AWSEBDockerrunVersion": 3,
+    "AWSEBDockerrunVersion": 2,
     "containerDefinitions": [
         {
-            "name": "django",
-            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/django-app",
-            "hostname": "django",
+            "environment": [
+                {
+                    "name": "DOMAIN_NAME",
+                    "value": "multicontainerdockertutorialdjango-env.eba-tut54tp7.us-east-1.elasticbeanstalk.com"
+                }
+            ],
             "essential": true,
-            "memory": 1024,
+            "links": [
+				"django"
+			],
+            "image": "abiosoft/caddy:0.11.0",
+            "memory": 100,
+            "name": "caddy",
             "portMappings": [
                 {
-                    "hostPort": 5000,
-                    "containerPort": 5000
+                    "containerPort": 80,
+                    "hostPort": 80
+                },
+                {
+                    "containerPort": 443,
+                    "hostPort": 443
                 }
             ]
         },
-        {
-            "name": "caddy",
-            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/caddy-app",
-            "hostname": "caddy",
+        {   "environment": [
+            {
+                "name": "DJANGO_SECRET_KEY",
+                "value": "(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv"
+            },
+            {
+                "name": "DJANGO_ADMIN_URL",
+                "value": "admin"
+            },
+            {
+                "name": "DJANGO_SETTINGS_MODULE",
+                "value": "config.settings.production"
+            },
+            {
+                "name": "DJANGO_AWS_STORAGE_BUCKET_NAME",
+                "value": "comparteridefernando"
+            }    
+        ],
             "essential": true,
-            "portMappings": [
-                {
-                    "hostPort": 80,
-                    "containerPort": 80
-                },
-                {
-                    "hostPort": 443,
-                    "containerPort": 443
-                }
-            ],
-            "links": ["django"],
-            "memory": 512
+            "name": "django",
+            "image": "chaoslecion/fer-app",
+            "memory": 100,
+            "portMappings": [{
+				"containerPort": 5000,
+				"hostPort": 5000
+			}]
+
         }
     ]
 }

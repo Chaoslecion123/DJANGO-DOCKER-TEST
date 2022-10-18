@@ -36,7 +36,7 @@ services:
       context: .
       dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
-    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/caddy-app
+    image: abiosoft/caddy:0.11.0
     depends_on:
       - django
     volumes:
