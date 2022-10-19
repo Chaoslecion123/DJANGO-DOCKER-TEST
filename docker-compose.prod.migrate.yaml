@@ -20,19 +20,16 @@
 #             - subnet-FILL_ME
             
 services:
-  postgres:
-    image: chaoslecion/fiisbook_production_postgres:latest
-    x-aws-pull_credentials: fyqs0go14e4m2uzf5gwqzdm2v
-  django:
+  django: &django
     image: chaoslecion/fiisbook_production_django:latest
-    x-aws-pull_credentials: fyqs0go14e4m2uzf5gwqzdm2v
+    x-aws-pull_credentials: ${DOCKER_PULL_SECRETS_MANAGER}
+  caddy:
+    image: chaoslecion/fiisbook_production_caddy:latest
+    x-aws-pull_credentials: ${DOCKER_PULL_SECRETS_MANAGER}
     logging:
       options:
         mode: non-blocking # Default is blocking
         max-buffer-size: 5m # Default is 1min
-  caddy:
-    image: chaoslecion/fiisbook_production_caddy:latest
-    x-aws-pull_credentials: fyqs0go14e4m2uzf5gwqzdm2v
     # This enables task level IAM role for the service
     # x-aws-role:
     #     Version: '2012-10-17'

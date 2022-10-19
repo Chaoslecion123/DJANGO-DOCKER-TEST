@@ -1,5 +1,3 @@
-version: '3'
-
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
@@ -11,7 +9,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
-    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/django-app
+    image: fiisbook_production_django
     # depends_on:
     #   - postgres
       # - redis
@@ -19,6 +17,10 @@ services:
       - ./envs/.production/.django
       - ./envs/.production/.postgres
     command: /start
+    networks: 
+      - backnet
+
+
 
   # postgres:
   #   build:
@@ -36,7 +38,7 @@ services:
       context: .
       dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
-    image: abiosoft/caddy:0.11.0
+    image: fiisbook_production_caddy
     depends_on:
       - django
     volumes:
@@ -46,6 +48,10 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
+    networks: 
+      - backnet
+
+
 
   # redis:
   #   image: redis:3.2
@@ -66,3 +72,6 @@ services:
   #   ports:
   #     - "5555:5555"
   #   command: /start-flower
+    
+networks:
+  backnet:
