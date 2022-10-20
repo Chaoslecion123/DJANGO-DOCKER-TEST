@@ -49,7 +49,7 @@ services:
   caddy:
     build:
       context: .
-      dockerfile: ./compose/production/caddy/Dockerfile
+      dockerfile: ${PWD}/compose/production/caddy/Dockerfile
     container_name: caddy
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
     depends_on:
