@@ -3,7 +3,7 @@
     "Authentication": {
         "bucket": "dockercfg-fer",
         "key": ".dockercfg"
-    }
+    },
     "containerDefinitions": [
         {
             "environment": [
