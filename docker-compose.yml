@@ -15,9 +15,20 @@ services:
     # depends_on:
     #   - postgres
       # - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
+    environment:
+      - DJANGO_SECRET_KEY=(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv
+      - DJANGO_ADMIN_URL=admin
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+      - DJANGO_AWS_STORAGE_BUCKET_NAME=comparteride-fernando
+      - POSTGRES_HOST=db-django-elb.cu6nfzzoqklg.us-east-1.rds.amazonaws.com
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=dbdjango2
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+    
+      # - ./.envs/.production/.django
+      # - ./.envs/.production/.postgres
     command: /start
     networks: 
       - backnet
@@ -45,8 +56,10 @@ services:
       - django
     volumes:
       - production_caddy:/root/.caddyv2
-    env_file:
-      - ./.envs/.production/.caddy
+    environment:
+      - DOMAIN_NAME=multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com
+    # env_file:
+    #   - ./.envs/.production/.caddy
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
