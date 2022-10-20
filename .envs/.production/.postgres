@@ -1,5 +1,5 @@
 # PostgreSQL
-POSTGRES_HOST=db-docker.cu6nfzzoqklg.us-east-1.rds.amazonaws.com
+POSTGRES_HOST=db-django-elb.cu6nfzzoqklg.us-east-1.rds.amazonaws.com
 POSTGRES_PORT=5432
 POSTGRES_DB=dbdjango2
 POSTGRES_USER=postgres
