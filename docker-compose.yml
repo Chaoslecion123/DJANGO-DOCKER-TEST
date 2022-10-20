@@ -8,8 +8,8 @@ volumes:
 services:
   django: &django
     build:
-      context: .
-      dockerfile: ./compose/production/django/Dockerfile
+      context: ./compose/production/django/Dockerfile
+      # dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django
     # depends_on:
@@ -48,8 +48,8 @@ services:
 
   caddy:
     build:
-      context: .
-      dockerfile: ./compose/production/caddy/Dockerfile
+      context: ./compose/production/caddy/Dockerfile
+      # dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
     depends_on:
