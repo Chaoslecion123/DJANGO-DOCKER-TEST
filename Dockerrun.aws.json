@@ -4,14 +4,6 @@
         "bucket": "dockercfg-fer",
         "key": ".dockercfg"
     },
-    "volumes": [
-        {
-          "name": "production_caddy",
-          "host": {
-            "sourcePath": "/var/app/current/production_caddy"
-          }
-        }
-    ],
     "containerDefinitions": [
         {
             "environment": [
@@ -24,13 +16,6 @@
             "links": [
 				"django"
 			],
-            "mountPoints": [
-                {
-                    "sourceVolume": "production_caddy",
-                    "containerPath": "/var/app/staging/compose/production/caddy/Dockerfile",
-                    "readOnly": false
-                }
-            ],
             "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy",
             "memory": 100,
             "name": "caddy",
