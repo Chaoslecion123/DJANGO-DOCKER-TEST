@@ -4,6 +4,15 @@
         "bucket": "dockercfg-fer",
         "key": ".dockercfg"
     },
+    "volumes": [
+        {
+          "name": "caddy",
+          "host": {
+            "sourcePath": "/var/app/staging/compose/production/caddy/Dockerfile"
+          }
+        }
+      ],
+
     "containerDefinitions": [
         {
             "environment": [
