@@ -5,14 +5,14 @@
             "environment": [
                 {
                     "name": "DOMAIN_NAME",
-                    "value": "multicontainerdockertutorialdjango-env.eba-tut54tp7.us-east-1.elasticbeanstalk.com"
+                    "value": "multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com"
                 }
             ],
             "essential": true,
             "links": [
 				"django"
 			],
-            "image": "abiosoft/caddy:0.11.0",
+            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy",
             "memory": 100,
             "name": "caddy",
             "portMappings": [
@@ -46,7 +46,7 @@
         ],
             "essential": true,
             "name": "django",
-            "image": "chaoslecion/fer-app",
+            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django",
             "memory": 100,
             "portMappings": [{
 				"containerPort": 5000,

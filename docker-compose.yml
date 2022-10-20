@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
-    image: fiisbook_production_django
+    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django
     # depends_on:
     #   - postgres
       # - redis
@@ -38,7 +38,7 @@ services:
       context: .
       dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
-    image: fiisbook_production_caddy
+    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
     depends_on:
       - django
     volumes:

@@ -1,0 +1,534 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Backnet80Ingress:
+    Properties:
+      CidrIp: 0.0.0.0/0
+      Description: caddy:80/tcp on backnet network
+      FromPort: 80
+      GroupId:
+        Ref: BacknetNetwork
+      IpProtocol: TCP
+      ToPort: 80
+    Type: AWS::EC2::SecurityGroupIngress
+  Backnet443Ingress:
+    Properties:
+      CidrIp: 0.0.0.0/0
+      Description: caddy:443/tcp on backnet network
+      FromPort: 443
+      GroupId:
+        Ref: BacknetNetwork
+      IpProtocol: TCP
+      ToPort: 443
+    Type: AWS::EC2::SecurityGroupIngress
+  BacknetNetwork:
+    Properties:
+      GroupDescription: project-malca Security Group for backnet network
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.network
+        Value: project-malca_backnet
+      VpcId: vpc-0e147245e15be5ae5
+    Type: AWS::EC2::SecurityGroup
+  BacknetNetworkIngress:
+    Properties:
+      Description: Allow communication within network backnet
+      GroupId:
+        Ref: BacknetNetwork
+      IpProtocol: "-1"
+      SourceSecurityGroupId:
+        Ref: BacknetNetwork
+    Type: AWS::EC2::SecurityGroupIngress
+  CaddyService:
+    DependsOn:
+    - CaddyTCP80Listener
+    - CaddyTCP443Listener
+    - DjangoService
+    - ProductioncaddyNFSMountTargetOnSubnet08f3f39ed8efae8fb
+    - ProductioncaddyNFSMountTargetOnSubnet0ece11bdc42e1d2e6
+    - ProductioncaddyNFSMountTargetOnSubnet04b170ad6232bb825
+    - ProductioncaddyNFSMountTargetOnSubnet0970d5579cf5dc9f0
+    - ProductioncaddyNFSMountTargetOnSubnet047cabbd2f79aac5e
+    - ProductioncaddyNFSMountTargetOnSubnet070c0ec4f811bb03f
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - Cluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      LoadBalancers:
+      - ContainerName: caddy
+        ContainerPort: 80
+        TargetGroupArn:
+          Ref: CaddyTCP80TargetGroup
+      - ContainerName: caddy
+        ContainerPort: 443
+        TargetGroupArn:
+          Ref: CaddyTCP443TargetGroup
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - Ref: BacknetNetwork
+          Subnets:
+          - subnet-08f3f39ed8efae8fb
+          - subnet-0ece11bdc42e1d2e6
+          - subnet-04b170ad6232bb825
+          - subnet-0970d5579cf5dc9f0
+          - subnet-047cabbd2f79aac5e
+          - subnet-070c0ec4f811bb03f
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - CaddyServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.service
+        Value: caddy
+      TaskDefinition:
+        Ref: CaddyTaskDefinition
+    Type: AWS::ECS::Service
+  CaddyServiceDiscoveryEntry:
+    Properties:
+      Description: '"caddy" service discovery entry in Cloud Map'
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: caddy
+      NamespaceId:
+        Ref: CloudMap
+    Type: AWS::ServiceDiscovery::Service
+  CaddyTCP80Listener:
+    Properties:
+      DefaultActions:
+      - ForwardConfig:
+          TargetGroups:
+          - TargetGroupArn:
+              Ref: CaddyTCP80TargetGroup
+        Type: forward
+      LoadBalancerArn:
+        Ref: LoadBalancer
+      Port: 80
+      Protocol: HTTP
+    Type: AWS::ElasticLoadBalancingV2::Listener
+  CaddyTCP80TargetGroup:
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      TargetType: ip
+      VpcId: vpc-0e147245e15be5ae5
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  CaddyTCP443Listener:
+    Properties:
+      DefaultActions:
+      - ForwardConfig:
+          TargetGroups:
+          - TargetGroupArn:
+              Ref: CaddyTCP443TargetGroup
+        Type: forward
+      LoadBalancerArn:
+        Ref: LoadBalancer
+      Port: 443
+      Protocol: HTTP
+    Type: AWS::ElasticLoadBalancingV2::Listener
+  CaddyTCP443TargetGroup:
+    Properties:
+      Port: 443
+      Protocol: HTTP
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      TargetType: ip
+      VpcId: vpc-0e147245e15be5ae5
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  CaddyTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - us-east-1.compute.internal
+        - project-malca.local
+        Essential: false
+        Image: docker/ecs-searchdomain-sidecar:1.0
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: project-malca
+        Name: Caddy_ResolvConf_InitContainer
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: Caddy_ResolvConf_InitContainer
+        Environment:
+        - Name: DOMAIN_NAME
+          Value: testsoverodjango.ml
+        Essential: true
+        Image: docker.io/chaoslecion/fiisbook_production_caddy:latest@sha256:40012187c798aafc724f732a817c17e90b76cf45fb477c5a2275c27672e55d55
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: project-malca
+        MountPoints:
+        - ContainerPath: /root/.caddyv2
+          SourceVolume: production_caddy
+        Name: caddy
+        PortMappings:
+        - ContainerPort: 80
+          HostPort: 80
+          Protocol: tcp
+        - ContainerPort: 443
+          HostPort: 443
+          Protocol: tcp
+        RepositoryCredentials:
+          CredentialsParameter: arn:aws:secretsmanager:us-east-1:862363392700:secret:pullcredentials-KNJAOz
+      Cpu: "256"
+      ExecutionRoleArn:
+        Ref: CaddyTaskExecutionRole
+      Family: project-malca-caddy
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+      TaskRoleArn:
+        Ref: CaddyTaskRole
+      Volumes:
+      - EFSVolumeConfiguration:
+          AuthorizationConfig:
+            AccessPointId:
+              Ref: ProductioncaddyAccessPoint
+            IAM: ENABLED
+          FilesystemId: fs-073682c7c5bd8b956
+          TransitEncryption: ENABLED
+        Name: production_caddy
+    Type: AWS::ECS::TaskDefinition
+  CaddyTaskExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - secretsmanager:GetSecretValue
+            - ssm:GetParameters
+            - kms:Decrypt
+            Condition: {}
+            Effect: Allow
+            Principal: {}
+            Resource:
+            - arn:aws:secretsmanager:us-east-1:862363392700:secret:pullcredentials-KNJAOz
+        PolicyName: caddyGrantAccessToSecrets
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.service
+        Value: caddy
+    Type: AWS::IAM::Role
+  CaddyTaskRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - elasticfilesystem:ClientMount
+            - elasticfilesystem:ClientWrite
+            - elasticfilesystem:ClientRootAccess
+            Condition:
+              StringEquals:
+                elasticfilesystem:AccessPointArn:
+                  Ref: ProductioncaddyAccessPoint
+            Effect: Allow
+            Principal: {}
+            Resource:
+            - arn:aws:elasticfilesystem:us-east-1:862363392700:file-system/fs-073682c7c5bd8b956
+          Version: 2012-10-17
+        PolicyName: CaddyProductioncaddyVolumeMountPolicy
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.service
+        Value: caddy
+    Type: AWS::IAM::Role
+  CloudMap:
+    Properties:
+      Description: Service Map for Docker Compose project project-malca
+      Name: project-malca.local
+      Vpc: vpc-0e147245e15be5ae5
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+  Cluster:
+    Properties:
+      ClusterName: project-malca
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+    Type: AWS::ECS::Cluster
+  DjangoService:
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - Cluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+          - Ref: BacknetNetwork
+          Subnets:
+          - subnet-08f3f39ed8efae8fb
+          - subnet-0ece11bdc42e1d2e6
+          - subnet-04b170ad6232bb825
+          - subnet-0970d5579cf5dc9f0
+          - subnet-047cabbd2f79aac5e
+          - subnet-070c0ec4f811bb03f
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - DjangoServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.service
+        Value: django
+      TaskDefinition:
+        Ref: DjangoTaskDefinition
+    Type: AWS::ECS::Service
+  DjangoServiceDiscoveryEntry:
+    Properties:
+      Description: '"django" service discovery entry in Cloud Map'
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: django
+      NamespaceId:
+        Ref: CloudMap
+    Type: AWS::ServiceDiscovery::Service
+  DjangoTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - us-east-1.compute.internal
+        - project-malca.local
+        Essential: false
+        Image: docker/ecs-searchdomain-sidecar:1.0
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: project-malca
+        Name: Django_ResolvConf_InitContainer
+      - Command:
+        - /start
+        DependsOn:
+        - Condition: SUCCESS
+          ContainerName: Django_ResolvConf_InitContainer
+        Environment:
+        - Name: DJANGO_ADMIN_URL
+          Value: admin
+        - Name: DJANGO_AWS_STORAGE_BUCKET_NAME
+          Value: comparteride-fernando
+        - Name: DJANGO_SECRET_KEY
+          Value: (6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv
+        - Name: DJANGO_SETTINGS_MODULE
+          Value: config.settings.production
+        - Name: POSTGRES_DB
+          Value: database-django
+        - Name: POSTGRES_HOST
+          Value: database-django.c3nlteckmr3z.us-east-1.rds.amazonaws.com
+        - Name: POSTGRES_PASSWORD
+          Value: postgres
+        - Name: POSTGRES_PORT
+          Value: "5432"
+        - Name: POSTGRES_USER
+          Value: postgres
+        Essential: true
+        Image: docker.io/chaoslecion/fiisbook_production_django:latest@sha256:168d0ca6ba5ba3caa82b8b512caf1485a3bcd4eb2a9e77bea9600c6aafce38e1
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: LogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: project-malca
+        Name: django
+        RepositoryCredentials:
+          CredentialsParameter: arn:aws:secretsmanager:us-east-1:862363392700:secret:pullcredentials-KNJAOz
+      Cpu: "256"
+      ExecutionRoleArn:
+        Ref: DjangoTaskExecutionRole
+      Family: project-malca-django
+      Memory: "512"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
+  DjangoTaskExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Condition: {}
+          Effect: Allow
+          Principal:
+            Service: ecs-tasks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - secretsmanager:GetSecretValue
+            - ssm:GetParameters
+            - kms:Decrypt
+            Condition: {}
+            Effect: Allow
+            Principal: {}
+            Resource:
+            - arn:aws:secretsmanager:us-east-1:862363392700:secret:pullcredentials-KNJAOz
+        PolicyName: djangoGrantAccessToSecrets
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.service
+        Value: django
+    Type: AWS::IAM::Role
+  LoadBalancer:
+    Properties:
+      Scheme: internet-facing
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      Subnets:
+      - subnet-08f3f39ed8efae8fb
+      - subnet-0ece11bdc42e1d2e6
+      - subnet-04b170ad6232bb825
+      - subnet-0970d5579cf5dc9f0
+      - subnet-047cabbd2f79aac5e
+      - subnet-070c0ec4f811bb03f
+      Tags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      Type: application
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+  LogGroup:
+    Properties:
+      LogGroupName: /docker-compose/project-malca
+    Type: AWS::Logs::LogGroup
+  ProductioncaddyAccessPoint:
+    Properties:
+      AccessPointTags:
+      - Key: com.docker.compose.project
+        Value: project-malca
+      - Key: com.docker.compose.volume
+        Value: production_caddy
+      - Key: Name
+        Value: project-malca_production_caddy
+      FileSystemId: fs-073682c7c5bd8b956
+    Type: AWS::EFS::AccessPoint
+  ProductioncaddyNFSMountTargetOnSubnet047cabbd2f79aac5e:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-047cabbd2f79aac5e
+    Type: AWS::EFS::MountTarget
+  ProductioncaddyNFSMountTargetOnSubnet04b170ad6232bb825:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-04b170ad6232bb825
+    Type: AWS::EFS::MountTarget
+  ProductioncaddyNFSMountTargetOnSubnet08f3f39ed8efae8fb:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-08f3f39ed8efae8fb
+    Type: AWS::EFS::MountTarget
+  ProductioncaddyNFSMountTargetOnSubnet070c0ec4f811bb03f:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-070c0ec4f811bb03f
+    Type: AWS::EFS::MountTarget
+  ProductioncaddyNFSMountTargetOnSubnet0970d5579cf5dc9f0:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-0970d5579cf5dc9f0
+    Type: AWS::EFS::MountTarget
+  ProductioncaddyNFSMountTargetOnSubnet0ece11bdc42e1d2e6:
+    Properties:
+      FileSystemId: fs-073682c7c5bd8b956
+      SecurityGroups:
+      - Ref: BacknetNetwork
+      SubnetId: subnet-0ece11bdc42e1d2e6
+    Type: AWS::EFS::MountTarget
