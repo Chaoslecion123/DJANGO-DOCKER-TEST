@@ -14,8 +14,8 @@ services:
     #   - postgres
       # - redis
     env_file:
-      - ./envs/.production/.django
-      - ./envs/.production/.postgres
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
     command: /start
     networks: 
       - backnet
@@ -44,7 +44,7 @@ services:
     volumes:
       - production_caddy:/root/.caddyv2
     env_file:
-      - ./envs/.production/.caddy
+      - ./.envs/.production/.caddy
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
