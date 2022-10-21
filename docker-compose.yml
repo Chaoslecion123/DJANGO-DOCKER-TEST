@@ -8,7 +8,7 @@ volumes:
 services:
   django: &django
     build:
-      context: ./compose/production/django
+      context: ./compose/production/django/
       # dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django
@@ -48,7 +48,7 @@ services:
 
   caddy:
     build:
-      context: ./compose/production/caddy
+      context: ./compose/production/caddy/
       # dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
