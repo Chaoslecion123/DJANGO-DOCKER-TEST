@@ -54,8 +54,8 @@ services:
     image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
     depends_on:
       - django
-    # volumes:
-    #   - production_caddy:/root/.caddyv2
+    volumes:
+      - production_caddy:/root/.caddyv2
     environment:
       - DOMAIN_NAME=multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com
     # env_file:

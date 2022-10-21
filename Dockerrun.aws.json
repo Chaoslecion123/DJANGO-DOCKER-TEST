@@ -18,6 +18,10 @@
 			],
             "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy",
             "memory": 100,
+            "mountPoints": [{
+				"containerPath": "/root/.caddyv2",
+				"sourceVolume": "production_caddy"
+			}],
             "name": "caddy",
             "portMappings": [
                 {
@@ -58,5 +62,12 @@
 			}]
 
         }
-    ]
+    ],
+    "volumes": [{
+        "host": {
+            "sourcePath": "production_caddy"
+        },
+        "name": "production_caddy"
+    }
+]
 }
