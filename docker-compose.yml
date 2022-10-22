@@ -11,16 +11,16 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     container_name: django 
-    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django
-    # depends_on:
-    #   - postgres
+    image: django_image_production
+    depends_on:
+      - postgres
       # - redis
     environment:
       - DJANGO_SECRET_KEY=(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv
       - DJANGO_ADMIN_URL=admin
       - DJANGO_SETTINGS_MODULE=config.settings.production
-      - DJANGO_AWS_STORAGE_BUCKET_NAME=comparteride-fernando
-      - POSTGRES_HOST=db-django-elb.cu6nfzzoqklg.us-east-1.rds.amazonaws.com
+      - DJANGO_AWS_STORAGE_BUCKET_NAME=comparteride-fernando-v2
+      - POSTGRES_HOST=localhost
       - POSTGRES_PORT=5432
       - POSTGRES_DB=dbdjango2
       - POSTGRES_USER=postgres
@@ -35,29 +35,33 @@ services:
 
 
 
-  # postgres:
-  #   build:
-  #     context: .
-  #     dockerfile: ./compose/production/postgres/Dockerfile
-  #   container_name: postgres
-  #   image: 837789023751.dkr.ecr.us-east-1.amazonaws.com/postgres-lf:latest
-  #   volumes:
-  #     - production_postgres_data:/var/lib/postgresql/data
-  #   env_file:
-  #     - ./envs/.production/.postgres
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    container_name: postgres
+    image: postgres_image_production
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=dbdjango2
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 
   caddy:
     build:
       context: .
       dockerfile: ./compose/production/caddy/Dockerfile
     container_name: caddy
-    image: 862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy
+    image: caddy_image_production
     depends_on:
       - django
     volumes:
       - production_caddy:/root/.caddyv2
     environment:
-      - DOMAIN_NAME=multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com
+      - DOMAIN_NAME=multicontainerdockertutorialfernando-env.eba-v84r7adf.us-east-1.elasticbeanstalk.com
     # env_file:
     #   - ./.envs/.production/.caddy
     ports:
