@@ -25,7 +25,7 @@
                 }
             ],
             "essential": true,
-            "image": "postgres:10.5",
+            "image": "postgres_image_production",
             "memory": 100,
             "mountPoints": [
                 {
@@ -85,7 +85,7 @@
             "links": [
                 "django"
             ],
-            "image": "caddy:latest",
+            "image": "caddy_image_production",
             "memory": 100,
             "mountPoints": [
                 {
