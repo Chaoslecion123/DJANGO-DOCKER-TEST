@@ -6,7 +6,7 @@ services:
 after_succes:
   - docker build -t chaoslecion/djangofer -f  compose/production/django/Dockerfile . 
 
-  - echo "$DOCKER_PASSWORD" | docker login -u chaoslecion123 -p Newyesterday123.
+  - echo "$DOCKER_PASSWORD" | docker login -u chaoslecion123 -p Newyesterday123.  docker.io
 
   - docker images
 
