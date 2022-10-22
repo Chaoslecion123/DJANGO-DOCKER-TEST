@@ -4,13 +4,13 @@ services:
   - docker
 
 after_succes:
-  - docker build -t chaoslecion/djangofer -f  compose/production/django/Dockerfile . 
+  - docker build -t chaoslecion123/djangofer -f  compose/production/django/Dockerfile . 
 
   - echo "$DOCKER_PASSWORD" | docker login -u "chaoslecion123" -p "Newyesterday123."  docker.io
 
   - docker images
 
-  - docker push chaoslecion/djangofer
+  - docker push chaoslecion123/djangofer
 
 deploy:
   provider: elasticbeanstalk
