@@ -1,73 +1,76 @@
-{
-    "AWSEBDockerrunVersion": "2",
-    "Authentication": {
-        "bucket": "dockercfg-fer",
-        "key": ".dockercfg"
-    },
-    "containerDefinitions": [
-        {
-            "environment": [
-                {
-                    "name": "DOMAIN_NAME",
-                    "value": "multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com"
-                }
-            ],
-            "essential": true,
-            "links": [
-				"django"
-			],
-            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy",
-            "memory": 100,
-            "mountPoints": [{
-				"containerPath": "/root/.caddyv2",
-				"sourceVolume": "production_caddy"
-			}],
-            "name": "caddy",
-            "portMappings": [
-                {
-                    "containerPort": 80,
-                    "hostPort": 80
-                },
-                {
-                    "containerPort": 443,
-                    "hostPort": 443
-                }
-            ]
-        },
-        {   "environment": [
-            {
-                "name": "DJANGO_SECRET_KEY",
-                "value": "(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv"
-            },
-            {
-                "name": "DJANGO_ADMIN_URL",
-                "value": "admin"
-            },
-            {
-                "name": "DJANGO_SETTINGS_MODULE",
-                "value": "config.settings.production"
-            },
-            {
-                "name": "DJANGO_AWS_STORAGE_BUCKET_NAME",
-                "value": "comparteridefernando"
-            }    
-        ],
-            "essential": true,
-            "name": "django",
-            "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django",
-            "memory": 100,
-            "portMappings": [{
-				"containerPort": 5000,
-				"hostPort": 5000
-			}]
 
-        }
-    ],
-    "volumes": [{
-        "host": {
-            "sourcePath": "production_caddy"
-        },
-        "name": "production_caddy"
-    }
-]
-}
+
+
+// {
+//     "AWSEBDockerrunVersion": "2",
+//     "Authentication": {
+//         "bucket": "dockercfg-fer",
+//         "key": ".dockercfg"
+//     },
+//     "containerDefinitions": [
+//         {
+//             "environment": [
+//                 {
+//                     "name": "DOMAIN_NAME",
+//                     "value": "multicontainerdockertutorial-env.eba-pjzxjuig.us-east-1.elasticbeanstalk.com"
+//                 }
+//             ],
+//             "essential": true,
+//             "links": [
+// 				"django"
+// 			],
+//             "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-caddy",
+//             "memory": 100,
+//             "mountPoints": [{
+// 				"containerPath": "/root/.caddyv2",
+// 				"sourceVolume": "production_caddy"
+// 			}],
+//             "name": "caddy",
+//             "portMappings": [
+//                 {
+//                     "containerPort": 80,
+//                     "hostPort": 80
+//                 },
+//                 {
+//                     "containerPort": 443,
+//                     "hostPort": 443
+//                 }
+//             ]
+//         },
+//         {   "environment": [
+//             {
+//                 "name": "DJANGO_SECRET_KEY",
+//                 "value": "(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv"
+//             },
+//             {
+//                 "name": "DJANGO_ADMIN_URL",
+//                 "value": "admin"
+//             },
+//             {
+//                 "name": "DJANGO_SETTINGS_MODULE",
+//                 "value": "config.settings.production"
+//             },
+//             {
+//                 "name": "DJANGO_AWS_STORAGE_BUCKET_NAME",
+//                 "value": "comparteridefernando"
+//             }    
+//         ],
+//             "essential": true,
+//             "name": "django",
+//             "image": "862363392700.dkr.ecr.us-east-1.amazonaws.com/app-django",
+//             "memory": 100,
+//             "portMappings": [{
+// 				"containerPort": 5000,
+// 				"hostPort": 5000
+// 			}]
+
+//         }
+//     ],
+//     "volumes": [{
+//         "host": {
+//             "sourcePath": "production_caddy"
+//         },
+//         "name": "production_caddy"
+//     }
+// ]
+// }

@@ -4,18 +4,18 @@ services:
   - docker
 
 after_succes:
-  - docker build -t chaoslecion/fer-app -f  compose/production/django/Dockerfile . 
+  - docker build -t chaoslecion/djangofer -f  compose/production/django/Dockerfile . 
 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
 
-  - docker push chaoslecion/fer-app
+  - docker push chaoslecion/djangofer
 
 deploy:
   provider: elasticbeanstalk
   region: us-east-1
-  app: multicontainer-docker-tutorial-django
-  env: Multicontainerdockertutorialdjango-env
-  access_key_id: $AWS_ACCESS_KEY
+  app: multicontainer-docker-tutorial-fernando
+  env: Multicontainerdockertutorialfernando-env
+  access_key_id: $AWS_ACCESS_KEY 
   secret_access_key: $AWS_SECRET_KEY
   bucket_name: "buckets-travis-2022fer"
   bucket_path: "docker"
