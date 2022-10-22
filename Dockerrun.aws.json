@@ -8,46 +8,6 @@
         {
             "environment": [
                 {
-                    "name": "POSTGRES_USER",
-                    "value": "postgres"
-                },
-                {
-                    "name": "POSTGRES_PASSWORD",
-                    "value": "postgres"
-                },
-                {
-                    "name": "POSTGRES_DB",
-                    "value": "dbdjango2"
-                },
-                {
-                    "name": "POSTGRES_PORT",
-                    "value": 5432
-                },
-                {
-                    "name": "POSTGRES_HOST",
-                    "value": "localhost"
-                }
-            ],
-            "essential": true,
-            "image": "postgres_image_production",
-            "memory": 100,
-            "mountPoints": [
-                {
-                    "containerPath": "/var/lib/postgresql/data/",
-                    "sourceVolume": "postgres_data"
-                }
-            ],
-            "name": "postgres",
-            "portMappings": [
-                {
-                    "containerPort": 5432,
-                    "hostPort": 5432
-                }
-            ]
-        },
-        {
-            "environment": [
-                {
                     "name": "DJANGO_SECRET_KEY",
                     "value": "(6vrr3a4sz#an!9rbuein@gt-v(n6s5p=(g!b^my=qe3+f6=wv"
                 },
@@ -81,6 +41,47 @@
         {
             "environment": [
                 {
+                    "name": "POSTGRES_USER",
+                    "value": "postgres"
+                },
+                {
+                    "name": "POSTGRES_PASSWORD",
+                    "value": "postgres"
+                },
+                {
+                    "name": "POSTGRES_DB",
+                    "value": "dbdjango2"
+                },
+                {
+                    "name": "POSTGRES_PORT",
+                    "value": 5432
+                },
+                {
+                    "name": "POSTGRES_HOST",
+                    "value": "localhost"
+                }
+            ],
+            "essential": true,
+            "image": "postgres:10.5",
+            "memory": 100,
+            "mountPoints": [
+                {
+                    "containerPath": "/var/lib/postgresql/data/",
+                    "sourceVolume": "postgres_data"
+                }
+            ],
+            "name": "postgres",
+            "portMappings": [
+                {
+                    "containerPort": 5432,
+                    "hostPort": 5432
+                }
+            ]
+        },
+        
+        {
+            "environment": [
+                {
                     "name": "DOMAIN_NAME",
                     "value": "multicontainerdockertutorialfernando-env.eba-v84r7adf.us-east-1.elasticbeanstalk.com"
                 }
@@ -89,7 +90,7 @@
             "links": [
                 "django"
             ],
-            "image": "caddy_image_production",
+            "image": "caddy:latest",
             "memory": 100,
             "mountPoints": [
                 {
