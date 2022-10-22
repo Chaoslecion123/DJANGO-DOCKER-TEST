@@ -1,5 +1,9 @@
 {
-    "AWSEBDockerrunVersion": 2,
+    "AWSEBDockerrunVersion": "3",
+    "Authentication": {
+        "bucket": "dockercfg-luis",
+        "key": ".dockercfg"
+    },
     "containerDefinitions": [
         {
             "environment": [
